@@ -2,8 +2,7 @@ _Although I would ususally opt for having all of this information in JIRA, it is
 
 # Dev notes
 - Persistence of fetched/modified redux data is not required
-- I would use redux-thunk/redux-saga for sufficiently complex requirements, but in this case I will use react components to handle async data flows.
-- I h
+- I would use redux-thunk/redux-saga for sufficiently complex requirements, but in this case I will use react renderless components to handle async data flows.
 
 # State
 
@@ -106,14 +105,52 @@ Top-level view:
 
 # High level architecture overview
 
-- Redux store
+- Additional Dependencies
+    - redux / react-redux
+    - react-navigation
+- Framework-agnostic helpers (app/lib)
+    - API call wrappers
+        - fetchSettings
+        - fetchAllProfiles
+- Redux store (app/state)
+    - settings
+        - actions/reducers
+    - allProfiles
+        - actions/reducers
+    - savedProfiles
+        - actions/reducers
+    - index (reducers are combined and state type is defined)
+- Redux Selectors:
     - settings
     - allProfiles
     - savedProfiles
-    - navigation
-- Components
+- Components (app/components)
     - App
-        - AppStartupContainer
+        - StoreProvider
+            - initializes and provides redux store from app/state)
+        - AppStartupContainer (startup-related business logic)
+            - Settings and Pets API requests
+        - Tabs
+            - Search
+            - Saved
+                - (Can trigger top-level overlays using RN's Modal component)
+            - Settings
+
+## AppStartupContainer
+AppStartupContainer is a renderless component that will be mounted on app startup, and will be responsible for the following business logic:
+- Fetching and persisting pets.json api response to redux, and handling error cases
+- Fetching and persisting settings.json api response to redux, and handling error cases
+
+As I'd like to keep this implementation as simple as possible, I will be making use of renderless components for async business logic rather than redux-saga/redux-thunk. (mentioned in dev notes as well)
+
+## Tabs
+Utilizes react-navigation to provide a simple tab interface for the required views.
+
+## Tabs: Search
+
+## Tabs: Saved
+
+## Tabs: Settings
 
 
 # Manual Testing
@@ -143,6 +180,8 @@ my saved pets and move on to the next pet.
 - As a User I can tap on a pet from the saved screen to see their full profile (This can be  an overlay/modal that can be closed, or a new sub-screen that can be backed out of).
 
 - As a User I can visit a “Settings” page where I can edit my Adopter Profile which contains information about myself for the adoption agency to view as well as my pet preference (Dog or Cat) and age preference.
+
+- Test to ensure that Android back button and iOS gestures behaves as expected.
 
 # Must do before turning in
 
