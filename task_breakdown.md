@@ -4,6 +4,18 @@ _Although I would ususally opt for having all of this information in JIRA, it is
 - Persistence of fetched/modified redux data is not required
 - I would use redux-thunk/redux-saga for sufficiently complex requirements, but in this case I will use react renderless components to handle async data flows.
 
+Top Level TODO:
+- Create project structure
+- Create testing structure to match
+- Create App tab container
+- Create basic Search view with dummy data
+- app/state
+    - Add tests for search actions, reducers, and selectors
+    - Get tests passing
+    - Do anything else needed to get search state to a component (full data piping)
+        - StoreProdiver
+    
+
 # State
 
 ## Type Definitions
@@ -12,9 +24,9 @@ _Although I would ususally opt for having all of this information in JIRA, it is
 
 type PetProfile = {
     "id": number,
-    "type": sting,
-    "name": sting,
-    "img": sting, // image uri
+    "type": string,
+    "name": string,
+    "img": string, // image uri
     "sex": string,
     "age": number,
     "profile": string
@@ -120,7 +132,7 @@ Top-level view:
     - savedProfiles
         - actions/reducers
     - index (reducers are combined and state type is defined)
-- Redux Selectors:
+- Redux Selectors (app/state/{domain}/selectors):
     - settings
     - allProfiles
     - savedProfiles
@@ -135,6 +147,8 @@ Top-level view:
             - Saved
                 - (Can trigger top-level overlays using RN's Modal component)
             - Settings
+- Types (app/types)
+    - Top level flow type defintiions for the project
 
 ## AppStartupContainer
 AppStartupContainer is a renderless component that will be mounted on app startup, and will be responsible for the following business logic:
@@ -147,10 +161,23 @@ As I'd like to keep this implementation as simple as possible, I will be making 
 Utilizes react-navigation to provide a simple tab interface for the required views.
 
 ## Tabs: Search
+- As a User I can see a “Search” screen with a pet’s profile and picture on it.
+
+- As a User I only see the pets that match my preferences (Set on the “Setting” screen)
+
+- As a User I can swipe left to indicate that I am not interested in the pet and move on to 
+the next pet.
+
+- As a User I can swipe right to indicate that I am interested in the pet which will add it to 
+my saved pets and move on to the next pet.
 
 ## Tabs: Saved
+- As a User I can visit a “Saved” page so I can see a list of all the pets I swiped right on.
+
+- As a User I can tap on a pet from the saved screen to see their full profile (This can be  an overlay/modal that can be closed, or a new sub-screen that can be backed out of).
 
 ## Tabs: Settings
+- As a User I can visit a “Settings” page where I can edit my Adopter Profile which contains information about myself for the adoption agency to view as well as my pet preference (Dog or Cat) and age preference.
 
 
 # Manual Testing
