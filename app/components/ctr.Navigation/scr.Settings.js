@@ -2,16 +2,163 @@
 
 // @flow
 import * as React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TextInput, Switch, StyleSheet } from "react-native";
+import { settings as sampleSettings } from "app/lib/sampleData";
+import { type Settings } from "app/types";
 
-class Settings extends React.Component<void> {
+const styles = StyleSheet.create({
+  settingsContainer: {
+    flex: 1,
+    width: "100%",
+    padding: 10
+  },
+  bodyText: {
+    fontSize: 16
+  },
+  headerText: {
+    fontSize: 18
+  },
+  largeHeaderText: {
+    fontSize: 24
+  },
+  profileTextInput: {
+    minHeight: 200,
+    borderColor: "gray",
+    borderWidth: 1,
+    padding: 10,
+    fontSize: 16
+  },
+  ageTextInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 7,
+    padding: 5,
+    marginHorizontal: 10,
+    minWidth: 60
+  },
+  settingsListRowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 15
+  },
+  sectionHeader: {
+    marginTop: 15,
+    marginBottom: 5
+  },
+  typePreferenceSwitch: {
+    marginHorizontal: 5
+  }
+});
+
+const SectionHeader = (props: { title: string }) => (
+  <Text style={[styles.largeHeaderText, styles.sectionHeader]}>
+    {props.title}
+  </Text>
+);
+
+const SettingsListRow = (props: { title: string, rightSlot: React.Node }) => (
+  <View style={[styles.settingsListRowContainer]}>
+    <Text style={styles.headerText}>{props.title}</Text>
+    {props.rightSlot}
+  </View>
+);
+
+type State = {
+  updatedSettings: ?Settings
+};
+
+class SettingsScreen extends React.Component<void> {
+  state = {
+    updatedSettings: null
+  };
+
+  updateSettings = updates => {
+    const existingSettings = this.state.updatedSettings || sampleSettings;
+    this.setState({
+      updatedSettings: {
+        ...existingSettings,
+        ...updates
+      }
+    });
+    console.log("updating state to ", {
+      ...existingSettings,
+      ...updates
+    });
+  };
+
   render() {
+    const settings = this.state.updatedSettings || sampleSettings;
+    const { profile, typePreference, ageRange } = settings;
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Settings!</Text>
+      <View style={styles.settingsContainer}>
+        <SectionHeader title="Adopter Profile" />
+        <TextInput
+          multiline
+          style={[styles.profileTextInput, styles.bodyText]}
+          onChangeText={text => this.updateSettings({ profile: text })}
+          value={profile}
+        />
+        <SectionHeader title="Preferences" />
+        <SettingsListRow
+          title="Animal"
+          rightSlot={
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text styles={styles.headerText}>Cat</Text>
+              <Switch
+                style={styles.typePreferenceSwitch}
+                value={typePreference === "dog"}
+                onValueChange={isDog =>
+                  this.updateSettings({ typePreference: isDog ? "dog" : "cat" })
+                }
+              />
+              <Text styles={styles.headerText}>Dog</Text>
+            </View>
+          }
+        />
+
+        <SettingsListRow
+          title="Age"
+          rightSlot={
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TextInput
+                style={[styles.ageTextInput, styles.bodyText]}
+                placeholder="min"
+                placeholderTextColor="grey"
+                onChangeText={min => {
+                  this.updateSettings({
+                    ageRange: {
+                      ...ageRange,
+                      min: min.length > 0 ? parseInt(min) : 0
+                    }
+                  });
+                }}
+                value={ageRange.min.toString()}
+                keyboardType="number-pad"
+              />
+              <TextInput
+                style={[styles.ageTextInput, styles.bodyText]}
+                placeholder="max"
+                placeholderTextColor="grey"
+                onChangeText={max => {
+                  this.updateSettings({
+                    ageRange: {
+                      ...ageRange,
+                      max: max.length > 0 ? parseInt(max) : 0
+                    }
+                  });
+                }}
+                value={ageRange.max.toString()}
+                keyboardType="number-pad"
+              />
+            </View>
+          }
+        />
       </View>
     );
   }
 }
 
-export default Settings;
+export default SettingsScreen;

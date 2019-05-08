@@ -84,7 +84,6 @@ class DraggableSwiperBox extends React.Component<Props> {
       }).start();
 
       const screenWidth = Dimensions.get("window").width;
-      const startTime = Date.now();
       Animated.spring(this.translateX, {
         toValue: swipeDirection === "left" ? -screenWidth : screenWidth,
         duration: animationDuration,
