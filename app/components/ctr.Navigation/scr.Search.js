@@ -8,6 +8,18 @@ import type { PetProfile } from "app/types";
 import DraggableSwiperBox from "app/components/atm.DraggableSwiperBox";
 import PetProfileCard from "app/components/atm.PetProfileCard";
 
+const styles = StyleSheet.create({
+  swiperBox: {
+    ...StyleSheet.absoluteFillObject,
+    elevation: 1,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 10,
+    shadowOpacity: 0.2,
+    backgroundColor: "white"
+  }
+});
+
 type State = {
   currentIndex: number
 };
@@ -31,7 +43,7 @@ class Search extends React.PureComponent<void, State> {
     if (currentPetProfile) {
       currentPet = (
         <DraggableSwiperBox
-          style={StyleSheet.absoluteFill}
+          style={styles.swiperBox}
           key={currentPetProfile.id}
           onSwipeComplete={(direction: "left" | "right") =>
             this.onCurrentPetSwipe(direction, currentPetProfile.id)
@@ -45,10 +57,7 @@ class Search extends React.PureComponent<void, State> {
     const nextPetProfile = pets[this.state.currentIndex + 1];
     if (nextPetProfile) {
       nextPet = (
-        <DraggableSwiperBox
-          style={StyleSheet.absoluteFill}
-          key={nextPetProfile.id}
-        >
+        <DraggableSwiperBox style={styles.swiperBox} key={nextPetProfile.id}>
           <PetProfileCard petProfile={nextPetProfile} />
         </DraggableSwiperBox>
       );

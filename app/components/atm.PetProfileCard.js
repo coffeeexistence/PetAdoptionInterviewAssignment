@@ -1,7 +1,16 @@
 // @flow
 
 import * as React from "react";
-import { Animated, StyleSheet, View, Easing, Dimensions } from "react-native";
+import {
+  Animated,
+  StyleSheet,
+  View,
+  Easing,
+  Dimensions,
+  Text,
+  Image,
+  ScrollView
+} from "react-native";
 import type { PetProfile } from "app/types";
 
 const testColorTable = {
@@ -11,13 +20,23 @@ const testColorTable = {
   "1004": "green"
 };
 
+const styles = StyleSheet.create({
+  image: {
+    width: "100%",
+    minHeight: "50%"
+  }
+});
+
 export default ({ petProfile }: { petProfile: PetProfile }) => (
-  <View
-    style={[
-      StyleSheet.absoluteFill,
-      {
-        backgroundColor: testColorTable[petProfile.id.toString()]
-      }
-    ]}
-  />
+  <View style={[StyleSheet.absoluteFill]}>
+    <Image style={styles.image} source={{ uri: petProfile.img }} />
+    <View style={{ marginHorizontal: 10, height: "100%" }}>
+      <View style={{ marginVertical: 15 }}>
+        <Text>Fido, 3yr, M</Text>
+      </View>
+      <ScrollView style={{ flex: 1 }}>
+        <Text>{petProfile.profile}</Text>
+      </ScrollView>
+    </View>
+  </View>
 );
