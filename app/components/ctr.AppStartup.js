@@ -26,6 +26,10 @@ class AppStartup extends React.PureComponent<Props> {
       .catch(this.props.getAllProfilesFailure);
   };
 
+  fetchSettings = () => {
+    // TODO
+  };
+
   render() {
     return null;
   }
