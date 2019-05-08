@@ -5,8 +5,10 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import allProfilesReducer from "./allProfiles";
 import savedProfilesReducer from "./savedProfiles";
+import settingsReducer from "./settings";
 
 const rootReducer = combineReducers({
+  settings: settingsReducer,
   allProfiles: allProfilesReducer,
   savedProfiles: savedProfilesReducer
 });
