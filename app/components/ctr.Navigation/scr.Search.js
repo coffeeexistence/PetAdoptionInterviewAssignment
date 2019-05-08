@@ -6,7 +6,7 @@ import { Animated, StyleSheet, View, Easing, Dimensions } from "react-native";
 import { pets } from "app/lib/sampleData";
 import type { PetProfile } from "app/types";
 import DraggableSwiperBox from "app/components/atm.DraggableSwiperBox";
-import PetProfileCard from "app/components/atm.PetProfileCard";
+import PetProfileComponent from "app/components/atm.PetProfile";
 
 const styles = StyleSheet.create({
   swiperBox: {
@@ -49,7 +49,7 @@ class Search extends React.PureComponent<void, State> {
             this.onCurrentPetSwipe(direction, currentPetProfile.id)
           }
         >
-          <PetProfileCard petProfile={currentPetProfile} />
+          <PetProfileComponent petProfile={currentPetProfile} />
         </DraggableSwiperBox>
       );
     }
@@ -58,7 +58,7 @@ class Search extends React.PureComponent<void, State> {
     if (nextPetProfile) {
       nextPet = (
         <DraggableSwiperBox style={styles.swiperBox} key={nextPetProfile.id}>
-          <PetProfileCard petProfile={nextPetProfile} />
+          <PetProfileComponent petProfile={nextPetProfile} />
         </DraggableSwiperBox>
       );
     }

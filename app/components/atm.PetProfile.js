@@ -27,18 +27,26 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ({ petProfile }: { petProfile: PetProfile }) => (
-  <View style={[StyleSheet.absoluteFill]}>
+export default ({
+  petProfile,
+  bottomChildren
+}: {
+  petProfile: PetProfile,
+  bottomChildren?: React.Node
+}) => (
+  <View style={[StyleSheet.absoluteFill, { height: "100%" }]}>
     <Image style={styles.image} source={{ uri: petProfile.img }} />
-    <View style={{ marginHorizontal: 10, height: "100%" }}>
+    <View style={{ marginHorizontal: 10, flex: 1 }}>
       <View style={{ marginVertical: 15 }}>
         <Text style={styles.headerText}>
           {getHeaderTextFromProfile(petProfile)}
         </Text>
       </View>
+
       <ScrollView style={{ flex: 1 }}>
         <Text style={styles.bodyText}>{petProfile.profile}</Text>
       </ScrollView>
+      {bottomChildren}
     </View>
   </View>
 );
