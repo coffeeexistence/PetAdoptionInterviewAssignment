@@ -4,20 +4,13 @@ import * as React from "react";
 import { View, Text } from "react-native";
 import { createBottomTabNavigator, createAppContainer } from "react-navigation";
 import Search from "./scr.Search";
-
-class SettingsScreen extends React.Component<void> {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Settings!</Text>
-      </View>
-    );
-  }
-}
+import Saved from "./scr.Saved";
+import Settings from "./scr.Settings";
 
 const TabNavigator = createBottomTabNavigator({
+  Saved: Saved,
   Search: Search,
-  Settings: SettingsScreen
+  Settings: Settings
 });
 
 export default createAppContainer(TabNavigator);
