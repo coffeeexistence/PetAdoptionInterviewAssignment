@@ -16,7 +16,7 @@ export const addSavedProfile = (
   payload: { profile }
 });
 
-type State = PetProfile[];
+export type State = PetProfile[];
 
 const initialState: State = [];
 

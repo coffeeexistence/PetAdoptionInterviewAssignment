@@ -30,7 +30,7 @@ export const getAllProfilesSuccess = (
   payload: { profiles }
 });
 
-type State = {
+export type State = {
   profiles: ?(PetProfile[]),
   isLoading: ?boolean,
   didEncounterFetchError: ?boolean

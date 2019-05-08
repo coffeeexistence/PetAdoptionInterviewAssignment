@@ -1,10 +1,13 @@
 // @flow
 
-// @flow
 import * as React from "react";
+import { connect } from "react-redux";
 import { View, Text, TextInput, Switch, StyleSheet } from "react-native";
 import { settings as sampleSettings } from "app/lib/sampleData";
 import { type Settings } from "app/types";
+import { setSettings as setSettingsAction } from "app/redux-store/settings";
+import { getSettings } from "app/selectors/settings";
+import { type State } from "app/redux-store";
 
 const styles = StyleSheet.create({
   settingsContainer: {
@@ -66,31 +69,24 @@ const SettingsListRow = (props: { title: string, rightSlot: React.Node }) => (
   </View>
 );
 
-type State = {
-  updatedSettings: ?Settings
+type Props = {
+  settings: ?Settings,
+  setSettings: typeof setSettingsAction
 };
 
-class SettingsScreen extends React.Component<void> {
-  state = {
-    updatedSettings: null
-  };
-
+class SettingsScreen extends React.PureComponent<Props> {
   updateSettings = updates => {
-    const existingSettings = this.state.updatedSettings || sampleSettings;
-    this.setState({
-      updatedSettings: {
-        ...existingSettings,
-        ...updates
-      }
-    });
-    console.log("updating state to ", {
-      ...existingSettings,
+    if (!this.props.settings) return;
+    this.props.setSettings({
+      ...this.props.settings,
       ...updates
     });
   };
 
   render() {
-    const settings = this.state.updatedSettings || sampleSettings;
+    const { settings } = this.props;
+    if (!settings) return null;
+
     const { profile, typePreference, ageRange } = settings;
     return (
       <View style={styles.settingsContainer}>
@@ -106,7 +102,7 @@ class SettingsScreen extends React.Component<void> {
           title="Animal"
           rightSlot={
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text styles={styles.headerText}>Cat</Text>
+              <Text style={styles.headerText}>Cat</Text>
               <Switch
                 style={styles.typePreferenceSwitch}
                 value={typePreference === "dog"}
@@ -114,7 +110,7 @@ class SettingsScreen extends React.Component<void> {
                   this.updateSettings({ typePreference: isDog ? "dog" : "cat" })
                 }
               />
-              <Text styles={styles.headerText}>Dog</Text>
+              <Text style={styles.headerText}>Dog</Text>
             </View>
           }
         />
@@ -161,4 +157,15 @@ class SettingsScreen extends React.Component<void> {
   }
 }
 
-export default SettingsScreen;
+const mapState = (state: State): $Shape<Props> => ({
+  settings: getSettings(state)
+});
+
+const mapDispatch: $Shape<Props> = {
+  setSettings: setSettingsAction
+};
+
+export default connect(
+  mapState,
+  mapDispatch
+)(SettingsScreen);

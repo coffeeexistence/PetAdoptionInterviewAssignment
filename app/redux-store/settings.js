@@ -1,6 +1,5 @@
 // @flow
 
-// @flow
 import type { Settings } from "app/types";
 
 type GetSettingsAction = { type: "GET_SETTINGS" };
@@ -43,7 +42,7 @@ export const setSettings = (settings: Settings): SetSettingsAction => ({
   payload: { settings }
 });
 
-type State = {
+export type State = {
   settings: ?Settings,
   isLoading: ?boolean,
   didEncounterFetchError: ?boolean
