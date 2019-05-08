@@ -3,13 +3,14 @@
 import * as React from "react";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Animated, Easing, Dimensions } from "react-native";
-
 import {
   PanGestureHandler,
   ScrollView,
   State as GestureState,
   type PanGestureHandlerStateChangeEvent
 } from "react-native-gesture-handler";
+
+const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 500;
 
 type Props = {
   children: React.Node,
@@ -54,7 +55,6 @@ class DraggableSwiperBox extends React.Component<Props> {
     };
   }
   onHandlerStateChange = (event: PanGestureHandlerStateChangeEvent) => {
-    const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 75;
     const {
       velocityX,
       velocityY,

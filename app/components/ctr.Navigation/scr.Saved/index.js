@@ -86,7 +86,6 @@ class Saved extends React.Component<void, State> {
           transparent={false}
           visible={this.state.modal.isVisible}
           onRequestClose={this.closeModal}
-          onDismiss={() => console.log("dismiss")}
         >
           <PetProfileComponent
             petProfile={this.state.modal.petProfile}
