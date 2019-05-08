@@ -12,10 +12,16 @@ type GetSettingsSuccessAction = {
   payload: { settings: Settings }
 };
 
+type SetSettingsAction = {
+  type: "SET_SETTINGS",
+  payload: { settings: Settings }
+};
+
 type Action =
   | GetSettingsAction
   | GetSettingsFailureAction
-  | GetSettingsSuccessAction;
+  | GetSettingsSuccessAction
+  | SetSettingsAction;
 
 export const getSettings = (): GetSettingsAction => ({
   type: "GET_SETTINGS"
@@ -29,6 +35,11 @@ export const getSettingsSuccess = (
   settings: Settings
 ): GetSettingsSuccessAction => ({
   type: "GET_SETTINGS_SUCCESS",
+  payload: { settings }
+});
+
+export const setSettings = (settings: Settings): SetSettingsAction => ({
+  type: "SET_SETTINGS",
   payload: { settings }
 });
 
@@ -64,6 +75,11 @@ export default (previousState: State = initialState, action: Action): State => {
         settings: action.payload.settings,
         isLoading: false,
         didEncounterFetchError: false
+      };
+    case "SET_SETTINGS":
+      return {
+        ...previousState,
+        settings: action.payload.settings
       };
     default:
       return previousState;
