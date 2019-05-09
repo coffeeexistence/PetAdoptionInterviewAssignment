@@ -1,25 +1,24 @@
 // @flow
 
-import * as React from "react";
-import Swipeable from "react-native-gesture-handler/Swipeable";
-import { Animated, StyleSheet, View, Easing, Dimensions } from "react-native";
-import { connect } from "react-redux";
-import type { PetProfile } from "app/types";
-import DraggableSwiperBox from "app/components/atm.DraggableSwiperBox";
-import PetProfileComponent from "app/components/atm.PetProfile";
-import getFilteredPetProfiles from "app/selectors/getFilteredPetProfiles";
-import { addSavedProfile as addSavedProfileAction } from "app/redux-store/savedProfiles";
+import * as React from 'react';
+import { Animated, StyleSheet, View, Easing, Dimensions } from 'react-native';
+import { connect } from 'react-redux';
+import type { PetProfile } from 'app/types';
+import DraggableSwiperBox from 'app/components/atm.DraggableSwiperBox';
+import PetProfileComponent from 'app/components/atm.PetProfile';
+import getFilteredPetProfiles from 'app/selectors/getFilteredPetProfiles';
+import { addSavedProfile as addSavedProfileAction } from 'app/redux-store/savedProfiles';
 
 const styles = StyleSheet.create({
   swiperBox: {
     ...StyleSheet.absoluteFillObject,
     elevation: 4,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 10,
     shadowOpacity: 0.2,
-    backgroundColor: "white",
-    overflow: "visible"
+    backgroundColor: 'white',
+    overflow: 'visible'
   }
 });
 
@@ -37,13 +36,13 @@ class Search extends React.PureComponent<Props, State> {
     excludedIds: {}
   };
 
-  onCurrentPetSwipe = (direction: "left" | "right", profile: PetProfile) => {
+  onCurrentPetSwipe = (direction: 'left' | 'right', profile: PetProfile) => {
     const excludedIds = {
       ...this.state.excludedIds,
       [profile.id]: true
     };
     this.setState({ excludedIds });
-    if (direction === "right") this.props.addSavedProfile(profile);
+    if (direction === 'right') this.props.addSavedProfile(profile);
   };
 
   getPets = () => {
@@ -67,7 +66,7 @@ class Search extends React.PureComponent<Props, State> {
         <DraggableSwiperBox
           style={styles.swiperBox}
           key={currentPetProfile.id}
-          onSwipeComplete={(direction: "left" | "right") =>
+          onSwipeComplete={(direction: 'left' | 'right') =>
             this.onCurrentPetSwipe(direction, currentPetProfile)
           }
         >

@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-// $FlowFixMe
+// $FlowFixMe ignoring this package since it has flow issues
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Animated, Easing, Dimensions, StyleSheet, Text } from 'react-native';
 import {
@@ -9,6 +9,7 @@ import {
   ScrollView,
   State as GestureState,
   type PanGestureHandlerStateChangeEvent
+  // $FlowFixMe ignoring this package since it has flow issues
 } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
