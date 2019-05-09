@@ -2,13 +2,22 @@
 
 import * as React from "react";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { Animated, Easing, Dimensions } from "react-native";
+import { Animated, Easing, Dimensions, StyleSheet, Text } from "react-native";
 import {
   PanGestureHandler,
   ScrollView,
   State as GestureState,
   type PanGestureHandlerStateChangeEvent
 } from "react-native-gesture-handler";
+
+const styles = StyleSheet.create({
+  overlays: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0, 0.05)",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});
 
 const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 500;
 
@@ -21,7 +30,8 @@ type Props = {
 class DraggableSwiperBox extends React.Component<Props> {
   translateX: any; // Animated.Value
   translateY: any; // Animated.Value
-  lastOffset: { x: number, y: number };
+  yesOverlayOpacity: any;
+  dismissOverlayOpacity: any;
   onGestureEvent: any; // Animated.event
   animatedContainerStyle: {
     transform: [
@@ -34,7 +44,16 @@ class DraggableSwiperBox extends React.Component<Props> {
     super(props);
     this.translateX = new Animated.Value(0);
     this.translateY = new Animated.Value(0);
-    this.lastOffset = { x: 0, y: 0 };
+    this.yesOverlayOpacity = this.translateX.interpolate({
+      inputRange: [0, 75, 76],
+      outputRange: [0, 1, 1],
+      extrapolate: "clamp"
+    });
+    this.dismissOverlayOpacity = this.translateX.interpolate({
+      inputRange: [-76, -75, 0],
+      outputRange: [1, 1, 0],
+      extrapolate: "clamp"
+    });
     this.onGestureEvent = Animated.event(
       [
         {
@@ -71,8 +90,7 @@ class DraggableSwiperBox extends React.Component<Props> {
     const swipeDirection = velocityX > 0 ? "right" : "left";
 
     if (didUserSwipeHorizontally) {
-      // Fly away
-      // Infer from velocity data where card should fly
+      // Fly away - infer from velocity data where card should fly
       const animationDuration = 500;
       const velocityToAnimationDurationRatio = animationDuration / 1000;
 
@@ -106,6 +124,28 @@ class DraggableSwiperBox extends React.Component<Props> {
       }).start();
     }
   };
+
+  renderIndicatorOverlays = () => {
+    const yesOverlayStyle = [
+      styles.overlays,
+      { opacity: this.yesOverlayOpacity }
+    ];
+
+    const dismissOverlayStyle = [
+      styles.overlays,
+      { opacity: this.dismissOverlayOpacity }
+    ];
+
+    return [
+      <Animated.View style={yesOverlayStyle}>
+        <Text style={{ fontSize: 30 }}>🎉</Text>
+      </Animated.View>,
+      <Animated.View style={dismissOverlayStyle}>
+        <Text style={{ fontSize: 30 }}>❌</Text>
+      </Animated.View>
+    ];
+  };
+
   render() {
     return (
       <PanGestureHandler
@@ -114,10 +154,10 @@ class DraggableSwiperBox extends React.Component<Props> {
       >
         <Animated.View style={[this.animatedContainerStyle, this.props.style]}>
           {this.props.children}
+          {this.renderIndicatorOverlays()}
         </Animated.View>
       </PanGestureHandler>
     );
   }
 }
-
 export default DraggableSwiperBox;
