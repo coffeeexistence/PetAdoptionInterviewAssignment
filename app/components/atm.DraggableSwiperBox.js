@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 const acceptEmoji = String.fromCodePoint(127881); // tada emoji
 const denyEmoji = String.fromCodePoint(10060); // X emoji
 
-const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 500;
+const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 275;
 type Props = {
   children: React.Node,
   style: number | Object,
@@ -55,13 +55,13 @@ class DraggableSwiperBox extends React.Component<Props> {
     this.translateX = new Animated.Value(0);
     this.translateY = new Animated.Value(0);
     this.yesOverlayOpacity = this.translateX.interpolate({
-      inputRange: [0, 75, 76],
-      outputRange: [0, 1, 1],
+      inputRange: [10, 70],
+      outputRange: [0, 1],
       extrapolate: 'clamp'
     });
     this.dismissOverlayOpacity = this.translateX.interpolate({
-      inputRange: [-76, -75, 0],
-      outputRange: [1, 1, 0],
+      inputRange: [-70, -10],
+      outputRange: [1, 0],
       extrapolate: 'clamp'
     });
     this.onGestureEvent = Animated.event(
