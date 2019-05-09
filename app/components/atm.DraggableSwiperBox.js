@@ -1,21 +1,22 @@
 // @flow
 
-import * as React from "react";
-import Swipeable from "react-native-gesture-handler/Swipeable";
-import { Animated, Easing, Dimensions, StyleSheet, Text } from "react-native";
+import * as React from 'react';
+// $FlowFixMe
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { Animated, Easing, Dimensions, StyleSheet, Text } from 'react-native';
 import {
   PanGestureHandler,
   ScrollView,
   State as GestureState,
   type PanGestureHandlerStateChangeEvent
-} from "react-native-gesture-handler";
+} from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   overlays: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0, 0.05)",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: 'rgba(0,0,0, 0.05)',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
@@ -24,7 +25,7 @@ const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 500;
 type Props = {
   children: React.Node,
   style: number | Object,
-  onSwipeComplete?: (swipeDirection: "left" | "right") => void
+  onSwipeComplete?: (swipeDirection: 'left' | 'right') => void
 };
 
 class DraggableSwiperBox extends React.Component<Props> {
@@ -47,12 +48,12 @@ class DraggableSwiperBox extends React.Component<Props> {
     this.yesOverlayOpacity = this.translateX.interpolate({
       inputRange: [0, 75, 76],
       outputRange: [0, 1, 1],
-      extrapolate: "clamp"
+      extrapolate: 'clamp'
     });
     this.dismissOverlayOpacity = this.translateX.interpolate({
       inputRange: [-76, -75, 0],
       outputRange: [1, 1, 0],
-      extrapolate: "clamp"
+      extrapolate: 'clamp'
     });
     this.onGestureEvent = Animated.event(
       [
@@ -87,7 +88,7 @@ class DraggableSwiperBox extends React.Component<Props> {
 
     const didUserSwipeHorizontally =
       Math.abs(velocityX) > MINIMUM_ABSOLUTE_SWIPE_VELOCITY;
-    const swipeDirection = velocityX > 0 ? "right" : "left";
+    const swipeDirection = velocityX > 0 ? 'right' : 'left';
 
     if (didUserSwipeHorizontally) {
       // Fly away - infer from velocity data where card should fly
@@ -101,9 +102,9 @@ class DraggableSwiperBox extends React.Component<Props> {
         easing: Easing.linear
       }).start();
 
-      const screenWidth = Dimensions.get("window").width;
+      const screenWidth = Dimensions.get('window').width;
       Animated.spring(this.translateX, {
-        toValue: swipeDirection === "left" ? -screenWidth : screenWidth,
+        toValue: swipeDirection === 'left' ? -screenWidth : screenWidth,
         duration: animationDuration,
         useNativeDriver: true,
         velocity: velocityX,
@@ -136,14 +137,17 @@ class DraggableSwiperBox extends React.Component<Props> {
       { opacity: this.dismissOverlayOpacity }
     ];
 
-    return [
-      <Animated.View style={yesOverlayStyle}>
-        <Text style={{ fontSize: 30 }}>🎉</Text>
-      </Animated.View>,
-      <Animated.View style={dismissOverlayStyle}>
-        <Text style={{ fontSize: 30 }}>❌</Text>
-      </Animated.View>
-    ];
+    return (
+      <>
+        <Animated.View style={yesOverlayStyle}>
+          <Text style={{ fontSize: 30 }}>🎉</Text>
+        </Animated.View>
+
+        <Animated.View style={dismissOverlayStyle}>
+          <Text style={{ fontSize: 30 }}>❌</Text>
+        </Animated.View>
+      </>
+    );
   };
 
   render() {
