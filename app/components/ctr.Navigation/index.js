@@ -8,9 +8,9 @@ import Saved from "./scr.Saved";
 import Settings from "./scr.Settings";
 
 const TabNavigator = createBottomTabNavigator({
-  Settings: Settings,
+  Search: Search,
   Saved: Saved,
-  Search: Search
+  Settings: Settings
 });
 
 export default createAppContainer(TabNavigator);

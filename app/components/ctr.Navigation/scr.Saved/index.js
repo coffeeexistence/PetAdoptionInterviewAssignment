@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import { connect } from "react-redux";
 import {
   View,
   Text,
@@ -13,8 +14,8 @@ import {
 } from "react-native";
 import getHeaderTextFromProfile from "app/lib/getHeaderTextFromProfile";
 import { type PetProfile } from "app/types";
-import { pets } from "app/lib/sampleData";
 import PetProfileComponent from "app/components/atm.PetProfile";
+import { getSavedProfilesState } from "app/selectors/savedProfiles";
 
 const PetProfileCard = ({ petProfile }: { petProfile: PetProfile }) => (
   <View
@@ -49,6 +50,10 @@ const PetProfileCard = ({ petProfile }: { petProfile: PetProfile }) => (
   </View>
 );
 
+type Props = {
+  savedProfiles: PetProfile[]
+};
+
 type State = {
   modal: null | {
     isVisible: boolean,
@@ -56,7 +61,7 @@ type State = {
   }
 };
 
-class Saved extends React.Component<void, State> {
+class Saved extends React.Component<Props, State> {
   state = {
     modal: null
   };
@@ -104,7 +109,7 @@ class Saved extends React.Component<void, State> {
   };
 
   render() {
-    const petProfileCards = pets.map(petProfile => (
+    const petProfileCards = this.props.savedProfiles.map(petProfile => (
       <TouchableOpacity
         key={petProfile.id}
         onPress={() => this.showModal(petProfile)}
@@ -128,4 +133,8 @@ class Saved extends React.Component<void, State> {
   }
 }
 
-export default Saved;
+const mapState = (state): $Shape<Props> => ({
+  savedProfiles: getSavedProfilesState(state)
+});
+
+export default connect(mapState)(Saved);

@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 7,
     padding: 5,
-    marginHorizontal: 10,
+    marginLeft: 15,
     minWidth: 60
   },
   settingsListRowContainer: {
