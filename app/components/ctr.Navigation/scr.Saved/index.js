@@ -1,28 +1,27 @@
 // @flow
-import * as React from "react";
-import { connect } from "react-redux";
+import * as React from 'react';
+import { connect } from 'react-redux';
 import {
   View,
   Text,
   Image,
   StyleSheet,
   ScrollView,
-  Dimensions,
   TouchableOpacity,
   Modal,
   Button
-} from "react-native";
-import getHeaderTextFromProfile from "app/lib/getHeaderTextFromProfile";
-import { type PetProfile } from "app/types";
-import PetProfileComponent from "app/components/atm.PetProfile";
-import { getSavedProfilesState } from "app/selectors/savedProfiles";
+} from 'react-native';
+import getHeaderTextFromProfile from 'app/lib/getHeaderTextFromProfile';
+import { type PetProfile } from 'app/types';
+import PetProfileComponent from 'app/components/atm.PetProfile';
+import { getSavedProfilesState } from 'app/selectors/savedProfiles';
 
 const PetProfileCard = ({ petProfile }: { petProfile: PetProfile }) => (
   <View
     style={{
-      flexDirection: "row",
-      width: "100%",
-      borderColor: "black",
+      flexDirection: 'row',
+      width: '100%',
+      borderColor: 'black',
       borderWidth: 1,
       padding: 5,
       minHeight: 90
@@ -67,12 +66,12 @@ class Saved extends React.Component<Props, State> {
   };
 
   closeModal = () => {
-    this.setState({
+    this.setState(state => ({
       modal: {
-        ...this.state.modal,
+        ...state.modal,
         isVisible: false
       }
-    });
+    }));
   };
 
   showModal = (petProfile: PetProfile) =>
@@ -84,19 +83,20 @@ class Saved extends React.Component<Props, State> {
     });
 
   renderProfileModal = () => {
-    if (this.state.modal) {
+    const { modal } = this.state;
+    if (modal) {
       return (
         <Modal
           animationType="slide"
           transparent={false}
-          visible={this.state.modal.isVisible}
+          visible={modal.isVisible}
           onRequestClose={this.closeModal}
         >
           <PetProfileComponent
-            petProfile={this.state.modal.petProfile}
+            petProfile={modal.petProfile}
             bottomChildren={
               <View
-                style={{ flex: 0, width: "100%", minHeight: 40, height: 40 }}
+                style={{ flex: 0, width: '100%', minHeight: 40, height: 40 }}
               >
                 <Button title="Close" onPress={this.closeModal} />
               </View>
@@ -109,9 +109,11 @@ class Saved extends React.Component<Props, State> {
   };
 
   render() {
-    const petProfileCards = this.props.savedProfiles.map(petProfile => (
+    const { savedProfiles } = this.props;
+    const petProfileCards = savedProfiles.map(petProfile => (
       <TouchableOpacity
         key={petProfile.id}
+        // eslint-disable-next-line react/jsx-no-bind
         onPress={() => this.showModal(petProfile)}
       >
         <View style={{ marginBottom: 10 }}>
@@ -123,7 +125,7 @@ class Saved extends React.Component<Props, State> {
       <View style={[StyleSheet.absoluteFill]}>
         {this.renderProfileModal()}
         <ScrollView
-          style={{ height: "100%" }}
+          style={{ height: '100%' }}
           contentContainerStyle={{ padding: 10 }}
         >
           {petProfileCards}

@@ -1,10 +1,9 @@
 // @flow
 
-import { type State } from "app/redux-store";
-import { createSelector } from "reselect";
-import { getAllProfiles } from "./allProfiles";
-import { getSettings } from "./settings";
-import { type Settings, type PetProfile } from "app/types";
+import { createSelector } from 'reselect';
+import { type Settings, type PetProfile } from 'app/types';
+import { getAllProfiles } from './allProfiles';
+import { getSettings } from './settings';
 
 export default createSelector(
   [getAllProfiles, getSettings],

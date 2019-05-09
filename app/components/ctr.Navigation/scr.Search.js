@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { Animated, StyleSheet, View, Easing, Dimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import type { PetProfile } from 'app/types';
 import DraggableSwiperBox from 'app/components/atm.DraggableSwiperBox';
@@ -36,19 +36,26 @@ class Search extends React.PureComponent<Props, State> {
     excludedIds: {}
   };
 
-  onCurrentPetSwipe = (direction: 'left' | 'right', profile: PetProfile) => {
-    const excludedIds = {
-      ...this.state.excludedIds,
-      [profile.id]: true
-    };
-    this.setState({ excludedIds });
-    if (direction === 'right') this.props.addSavedProfile(profile);
+  onCurrentPetSwipe = (direction: 'left' | 'right') => {
+    const { addSavedProfile } = this.props;
+    const pets = this.getPets();
+    if (!pets) return;
+    const currentPetProfile = pets[0];
+    this.setState(state => ({
+      excludedIds: {
+        ...state.excludedIds,
+        [currentPetProfile.id]: true
+      }
+    }));
+    if (direction === 'right') addSavedProfile(currentPetProfile);
   };
 
   getPets = () => {
-    if (this.props.filteredPetProfiles) {
-      return this.props.filteredPetProfiles.filter(
-        profile => !this.state.excludedIds[profile.id.toString()]
+    const { filteredPetProfiles } = this.props;
+    const { excludedIds } = this.state;
+    if (filteredPetProfiles) {
+      return filteredPetProfiles.filter(
+        profile => !excludedIds[profile.id.toString()]
       );
     }
     return null;
@@ -66,9 +73,7 @@ class Search extends React.PureComponent<Props, State> {
         <DraggableSwiperBox
           style={styles.swiperBox}
           key={currentPetProfile.id}
-          onSwipeComplete={(direction: 'left' | 'right') =>
-            this.onCurrentPetSwipe(direction, currentPetProfile)
-          }
+          onSwipeComplete={this.onCurrentPetSwipe}
         >
           <PetProfileComponent petProfile={currentPetProfile} />
         </DraggableSwiperBox>

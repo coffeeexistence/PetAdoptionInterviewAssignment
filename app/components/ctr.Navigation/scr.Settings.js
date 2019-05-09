@@ -1,18 +1,17 @@
 // @flow
 
-import * as React from "react";
-import { connect } from "react-redux";
-import { View, Text, TextInput, Switch, StyleSheet } from "react-native";
-import { settings as sampleSettings } from "app/lib/sampleData";
-import { type Settings } from "app/types";
-import { setSettings as setSettingsAction } from "app/redux-store/settings";
-import { getSettings } from "app/selectors/settings";
-import { type State } from "app/redux-store";
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { View, Text, TextInput, Switch, StyleSheet } from 'react-native';
+import { type Settings } from 'app/types';
+import { setSettings as setSettingsAction } from 'app/redux-store/settings';
+import { getSettings } from 'app/selectors/settings';
+import { type State } from 'app/redux-store';
 
 const styles = StyleSheet.create({
   settingsContainer: {
     flex: 1,
-    width: "100%",
+    width: '100%',
     padding: 10
   },
   bodyText: {
@@ -26,14 +25,14 @@ const styles = StyleSheet.create({
   },
   profileTextInput: {
     minHeight: 200,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     padding: 10,
     fontSize: 16
   },
   ageTextInput: {
     height: 40,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 7,
     padding: 5,
@@ -41,10 +40,10 @@ const styles = StyleSheet.create({
     minWidth: 60
   },
   settingsListRowContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
     padding: 15
   },
   sectionHeader: {
@@ -56,16 +55,19 @@ const styles = StyleSheet.create({
   }
 });
 
-const SectionHeader = (props: { title: string }) => (
-  <Text style={[styles.largeHeaderText, styles.sectionHeader]}>
-    {props.title}
-  </Text>
+type SectionHeaderProps = { title: string };
+const SectionHeader = ({ title }: SectionHeaderProps) => (
+  <Text style={[styles.largeHeaderText, styles.sectionHeader]}>{title}</Text>
 );
 
-const SettingsListRow = (props: { title: string, rightSlot: React.Node }) => (
+type SettingsListRowProps = {
+  title: string,
+  rightSlot: React.Node
+};
+const SettingsListRow = ({ title, rightSlot }: SettingsListRowProps) => (
   <View style={[styles.settingsListRowContainer]}>
-    <Text style={styles.headerText}>{props.title}</Text>
-    {props.rightSlot}
+    <Text style={styles.headerText}>{title}</Text>
+    {rightSlot}
   </View>
 );
 
@@ -76,10 +78,38 @@ type Props = {
 
 class SettingsScreen extends React.PureComponent<Props> {
   updateSettings = updates => {
-    if (!this.props.settings) return;
-    this.props.setSettings({
-      ...this.props.settings,
+    const { settings, setSettings } = this.props;
+    if (!settings) return;
+    setSettings({
+      ...settings,
       ...updates
+    });
+  };
+
+  updateProfileText = text => this.updateSettings({ profile: text });
+
+  updateTypePreference = isDog =>
+    this.updateSettings({ typePreference: isDog ? 'dog' : 'cat' });
+
+  onAgeRangeMinTextUpdated = min => {
+    const { settings } = this.props;
+    if (!settings) return;
+    this.updateSettings({
+      ageRange: {
+        ...settings.ageRange,
+        min: min.length > 0 ? parseInt(min, 10) : 0
+      }
+    });
+  };
+
+  onAgeRangeMaxTextUpdated = max => {
+    const { settings } = this.props;
+    if (!settings) return;
+    this.updateSettings({
+      ageRange: {
+        ...settings.ageRange,
+        max: max.length > 0 ? parseInt(max, 10) : 0
+      }
     });
   };
 
@@ -94,21 +124,20 @@ class SettingsScreen extends React.PureComponent<Props> {
         <TextInput
           multiline
           style={[styles.profileTextInput, styles.bodyText]}
-          onChangeText={text => this.updateSettings({ profile: text })}
+          // eslint-disable-next-line react/jsx-no-bind
+          onChangeText={this.updateProfileText}
           value={profile}
         />
         <SectionHeader title="Preferences" />
         <SettingsListRow
           title="Animal"
           rightSlot={
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.headerText}>Cat</Text>
               <Switch
                 style={styles.typePreferenceSwitch}
-                value={typePreference === "dog"}
-                onValueChange={isDog =>
-                  this.updateSettings({ typePreference: isDog ? "dog" : "cat" })
-                }
+                value={typePreference === 'dog'}
+                onValueChange={this.updateTypePreference}
               />
               <Text style={styles.headerText}>Dog</Text>
             </View>
@@ -118,19 +147,12 @@ class SettingsScreen extends React.PureComponent<Props> {
         <SettingsListRow
           title="Age"
           rightSlot={
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextInput
                 style={[styles.ageTextInput, styles.bodyText]}
                 placeholder="min"
                 placeholderTextColor="grey"
-                onChangeText={min => {
-                  this.updateSettings({
-                    ageRange: {
-                      ...ageRange,
-                      min: min.length > 0 ? parseInt(min) : 0
-                    }
-                  });
-                }}
+                onChangeText={this.onAgeRangeMinTextUpdated}
                 value={ageRange.min.toString()}
                 keyboardType="number-pad"
               />
@@ -138,14 +160,7 @@ class SettingsScreen extends React.PureComponent<Props> {
                 style={[styles.ageTextInput, styles.bodyText]}
                 placeholder="max"
                 placeholderTextColor="grey"
-                onChangeText={max => {
-                  this.updateSettings({
-                    ageRange: {
-                      ...ageRange,
-                      max: max.length > 0 ? parseInt(max) : 0
-                    }
-                  });
-                }}
+                onChangeText={this.onAgeRangeMaxTextUpdated}
                 value={ageRange.max.toString()}
                 keyboardType="number-pad"
               />

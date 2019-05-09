@@ -1,12 +1,9 @@
 // @flow
 
 import * as React from 'react';
-// $FlowFixMe ignoring this package since it has flow issues
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Animated, Easing, Dimensions, StyleSheet, Text } from 'react-native';
 import {
   PanGestureHandler,
-  ScrollView,
   State as GestureState,
   type PanGestureHandlerStateChangeEvent
   // $FlowFixMe ignoring this package since it has flow issues
@@ -21,8 +18,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 500;
+const acceptEmoji = String.fromCodePoint(127881); // tada emoji
+const denyEmoji = String.fromCodePoint(10060); // X emoji
 
+const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 500;
 type Props = {
   children: React.Node,
   style: number | Object,
@@ -31,15 +30,24 @@ type Props = {
 
 class DraggableSwiperBox extends React.Component<Props> {
   translateX: any; // Animated.Value
+
   translateY: any; // Animated.Value
+
   yesOverlayOpacity: any;
+
   dismissOverlayOpacity: any;
+
   onGestureEvent: any; // Animated.event
+
   animatedContainerStyle: {
     transform: [
       { translateX: any }, // Animated.Value
       { translateY: any } // Animated.Value
     ]
+  };
+
+  static defaultProps = {
+    onSwipeComplete: undefined
   };
 
   constructor(props: Props) {
@@ -75,27 +83,20 @@ class DraggableSwiperBox extends React.Component<Props> {
       ]
     };
   }
-  onHandlerStateChange = (event: PanGestureHandlerStateChangeEvent) => {
-    const {
-      velocityX,
-      velocityY,
-      oldState,
-      translationX,
-      translationY
-    } = event.nativeEvent;
 
+  onHandlerStateChange = (event: PanGestureHandlerStateChangeEvent) => {
+    const { onSwipeComplete } = this.props;
+    const { velocityX, velocityY, oldState, translationY } = event.nativeEvent;
     const hasEnded = oldState === GestureState.ACTIVE; // Previously active, but no longer
     if (!hasEnded) return;
 
     const didUserSwipeHorizontally =
       Math.abs(velocityX) > MINIMUM_ABSOLUTE_SWIPE_VELOCITY;
     const swipeDirection = velocityX > 0 ? 'right' : 'left';
-
     if (didUserSwipeHorizontally) {
       // Fly away - infer from velocity data where card should fly
       const animationDuration = 500;
       const velocityToAnimationDurationRatio = animationDuration / 1000;
-
       Animated.timing(this.translateY, {
         toValue: translationY + velocityY * velocityToAnimationDurationRatio,
         useNativeDriver: true,
@@ -111,8 +112,7 @@ class DraggableSwiperBox extends React.Component<Props> {
         velocity: velocityX,
         overshootClamping: true
       }).start(() => {
-        if (this.props.onSwipeComplete)
-          this.props.onSwipeComplete(swipeDirection);
+        if (onSwipeComplete) onSwipeComplete(swipeDirection);
       });
     } else {
       // Return to original position
@@ -132,33 +132,29 @@ class DraggableSwiperBox extends React.Component<Props> {
       styles.overlays,
       { opacity: this.yesOverlayOpacity }
     ];
-
     const dismissOverlayStyle = [
       styles.overlays,
       { opacity: this.dismissOverlayOpacity }
     ];
-
-    return (
-      <>
-        <Animated.View style={yesOverlayStyle}>
-          <Text style={{ fontSize: 30 }}>🎉</Text>
-        </Animated.View>
-
-        <Animated.View style={dismissOverlayStyle}>
-          <Text style={{ fontSize: 30 }}>❌</Text>
-        </Animated.View>
-      </>
-    );
+    return [
+      <Animated.View key="accept" style={yesOverlayStyle}>
+        <Text style={{ fontSize: 30 }}>{acceptEmoji}</Text>
+      </Animated.View>,
+      <Animated.View key="deny" style={dismissOverlayStyle}>
+        <Text style={{ fontSize: 30 }}>{denyEmoji}</Text>
+      </Animated.View>
+    ];
   };
 
   render() {
+    const { style, children } = this.props;
     return (
       <PanGestureHandler
         onGestureEvent={this.onGestureEvent}
         onHandlerStateChange={this.onHandlerStateChange}
       >
-        <Animated.View style={[this.animatedContainerStyle, this.props.style]}>
-          {this.props.children}
+        <Animated.View style={[this.animatedContainerStyle, style]}>
+          {children}
           {this.renderIndicatorOverlays()}
         </Animated.View>
       </PanGestureHandler>

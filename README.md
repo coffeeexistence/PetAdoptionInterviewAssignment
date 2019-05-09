@@ -2,7 +2,6 @@ _Although I would ususally opt for having all of this information in JIRA, it is
 
 # Dev notes
 
-- Persistence of fetched/modified redux data is not required
 - I would use redux-thunk/redux-saga for sufficiently complex requirements, but in this case I will use react renderless components to handle async data flows.
 
 # Out of scope (but wouldn't be for an actual project)
@@ -13,6 +12,7 @@ _Although I would ususally opt for having all of this information in JIRA, it is
 - Offline UI
 - Local persistence between sessions
 - Testing of animations on low-end devices
+- Selector tests (due to time limitations)
 
 # State
 
@@ -118,7 +118,7 @@ Top-level view:
   - redux / react-redux
   - react-navigation
 - Framework-agnostic helpers (app/lib)
-  - API call wrappers
+  - API call wrappers (app/lib/api)
     - fetchSettings
     - fetchAllProfiles
 - Redux store (app/redux-store) Using ducks pattern (domain-based file structure/exports)
@@ -126,22 +126,21 @@ Top-level view:
   - allProfiles
   - savedProfiles
   - index (reducers are combined and state type is defined)
-- Redux Selectors (app/state/{domain}/selectors):
+- Redux Selectors (app/selectors):
   - settings
   - allProfiles
   - savedProfiles
   - getFilteredPetProfiles (filters allProfiles based on settings)
 - Components (app/components)
-  - App
-    - StoreProvider
-      - initializes and provides redux store from app/state)
-    - AppStartupContainer (startup-related business logic)
-      - Settings and Pets API requests
-    - Tabs
-      - Search
-      - Saved
-        - (Can trigger top-level overlays using RN's Modal component)
-      - Settings
+  - StoreProvider
+    - initializes and provides redux store from app/state)
+  - AppStartupContainer (startup-related business logic)
+    - Settings and Pets API requests
+  - Tabs
+    - Search
+    - Saved
+    - (Can trigger top-level overlays using RN's Modal component)
+    - Settings
 - Types (app/types) - general type defintiions
 
 ## AppStartupContainer

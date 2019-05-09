@@ -1,17 +1,17 @@
 // @flow
-import * as React from "react";
-import { connect } from "react-redux";
+import * as React from 'react';
+import { connect } from 'react-redux';
 import {
   getAllProfiles as getAllProfilesAction,
   getAllProfilesFailure as getAllProfilesFailureAction,
   getAllProfilesSuccess as getAllProfilesSuccessAction
-} from "app/redux-store/allProfiles";
+} from 'app/redux-store/allProfiles';
 import {
   getSettings as getSettingsAction,
   getSettingsFailure as getSettingsFailureAction,
   getSettingsSuccess as getSettingsSuccessAction
-} from "app/redux-store/settings";
-import { fetchAllProfiles, fetchSettings } from "app/lib/api";
+} from 'app/redux-store/settings';
+import { fetchAllProfiles, fetchSettings } from 'app/lib/api';
 
 type Props = {
   getAllProfiles: typeof getAllProfilesAction,
@@ -29,17 +29,25 @@ class AppStartup extends React.PureComponent<Props> {
   }
 
   fetchProfiles = () => {
-    this.props.getAllProfiles();
+    const {
+      getAllProfiles,
+      getAllProfilesSuccess,
+      getAllProfilesFailure
+    } = this.props;
+
+    getAllProfiles();
     fetchAllProfiles()
-      .then(this.props.getAllProfilesSuccess)
-      .catch(this.props.getAllProfilesFailure);
+      .then(getAllProfilesSuccess)
+      .catch(getAllProfilesFailure);
   };
 
   fetchSettings = () => {
-    this.props.getSettings();
+    const { getSettings, getSettingsSuccess, getSettingsFailure } = this.props;
+
+    getSettings();
     fetchSettings()
-      .then(this.props.getSettingsSuccess)
-      .catch(this.props.getSettingsFailure);
+      .then(getSettingsSuccess)
+      .catch(getSettingsFailure);
   };
 
   render() {
