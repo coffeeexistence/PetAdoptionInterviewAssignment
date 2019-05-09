@@ -1,5 +1,17 @@
 _Although I would ususally opt for having all of this information in JIRA, it isn't neccesary for a solo project, so this document will do_
 
+# Installation instructions (macOS only)
+
+_Disclaimer, I haven't tested these steps on any machine besides my own, there could very well be steps that I am missing_
+
+- Ensure that homebrew is installed.
+- Install and set up NVM through homebrew if it isn't already present.
+- You'll want to be on node version `v10.15.3`, you can get on that version by running `nvm install 10.15.3`, `nvm alias default 10.15.3`, and then `nvm use default`.
+- Install global dependencies, `npm i -g yarn@1.15.2 react-native-cli@2.0.1`.
+- Run `yarn` at the root of this repo.
+- Run `react-native run-android`, if you see errors about accpeting build-tools/platform-tools licenses, you'll need to install the versions of build-tools and platform-tools mentioned in the error text, you can follow [these instructions](https://developer.android.com/studio/intro/update#sdk-manager) for more instructions.
+- Run `react-native run-ios` for iOS.
+
 # Dev notes
 
 - I would use redux-thunk/redux-saga for sufficiently complex requirements, but in this case I will use react renderless components to handle async data flows.
