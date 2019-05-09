@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
 const acceptEmoji = String.fromCodePoint(127881); // tada emoji
 const denyEmoji = String.fromCodePoint(10060); // X emoji
 
-const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 275;
+const MINIMUM_ABSOLUTE_SWIPE_VELOCITY = 400;
+
 type Props = {
   children: React.Node,
   style: number | Object,
