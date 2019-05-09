@@ -5,13 +5,14 @@ _Although I would ususally opt for having all of this information in JIRA, it is
 - Persistence of fetched/modified redux data is not required
 - I would use redux-thunk/redux-saga for sufficiently complex requirements, but in this case I will use react renderless components to handle async data flows.
 
-# Out of scope
+# Out of scope (but wouldn't be for an actual project)
 
 - Tablet support
 - Notch support (Android or iOS)
 - Other iPhone X/XS/XR spacing issues
 - Offline UI
 - Local persistence between sessions
+- Testing of animations on low-end devices
 
 # State
 
@@ -31,7 +32,7 @@ type PetProfile = {
 type Settings = {
   id: number,
   profile: string,
-  typePreference: "cat" | "dog",
+  typePreference: 'cat' | 'dog',
   ageRange: {
     min: number,
     max: number
@@ -54,7 +55,7 @@ API response:
 
 ```js
 {
-    body: PetProfile[]
+  body: PetProfile[]
 }
 ```
 
@@ -77,46 +78,39 @@ Top-level view:
 {
     savedProfiles: PetProfile[],
     allProfiles: {
-        profiles: PetProfile[],
-        isLoading: boolean,
-        didEncounterFetchError: boolean,
+        profiles: ?PetProfile[],
+        isLoading: ?boolean,
+        didEncounterFetchError: ?boolean,
     },
     settings: {
-        settings: Settings,
-        isLoading: boolean,
-        didEncounterFetchError: boolean,
+        settings: ?Settings,
+        isLoading: ?boolean,
+        didEncounterFetchError: ?boolean,
     }
 }
 ```
 
 ### savedProfiles
 
-- [ ] Reducer: ADD_SAVED_PROFILE should add the profile to the beginning of the state (unshift)
-- [ ] Action: addSavedProfile should return the correct shape
+- [x] Reducer: ADD_SAVED_PROFILE should add the profile to the beginning of the state (unshift)
 
 ### allProfiles
 
-- [ ] Reducer: GET_ALL_PROFILES should set isLoading flag to true and set didEncounterFetchError to null
-- [ ] Action: getAllProfiles should return the correct shape
+- [x] Reducer: GET_ALL_PROFILES should set profiles to correct value, isLoading flag to true, and set didEncounterFetchError to null
 
-- [ ] Reducer: GET_ALL_PROFILES_SUCCESS should set isLoading flag to false
-- [ ] Action: getAllProfilesSuccess should return the correct shape
+- [x] Reducer: GET_ALL_PROFILES_SUCCESS should set isLoading flag to false
 
-- [ ] Reducer: GET_ALL_PROFILES_FAILURE should should set isLoading flag to false and set didEncounterFetchError to true
-- [ ] Action: getAllProfilesFailure should return the correct shape
+- [x] Reducer: GET_ALL_PROFILES_FAILURE should should set isLoading flag to false and set didEncounterFetchError to true
 
 ### settings
 
-- [ ] Reducer: GET_SETTINGS should set isLoading flag to true and set didEncounterFetchError to null
-- [ ] Action: getSettings should return the correct shape
+- [x] Reducer: GET_SETTINGS should set settings to correct value, set isLoading flag to true, and set didEncounterFetchError to null
 
-- [ ] Reducer: GET_SETTINGS_SUCCESS should set isLoading flag to false
-- [ ] Action: getSettingsSuccess should return the correct shape
+- [x] Reducer: GET_SETTINGS_SUCCESS should set isLoading flag to false
 
-- [ ] Reducer: GET_SETTINGS_FAILURE should should set isLoading flag to false and set didEncounterFetchError to true
-- [ ] Action: getSettingsFailure should return the correct shape
+- [x] Reducer: GET_SETTINGS_FAILURE should should set isLoading flag to false and set didEncounterFetchError to true
 
-### candidateProfiles
+- [x] Reducer: SET_SETTINGS should set settings
 
 # High level architecture overview
 
@@ -189,8 +183,8 @@ Utilizes react-navigation to provide a simple tab interface for the required vie
 
 ### Manual tests have been gone through on:
 
-- [ ] Android
-- [ ] iOS Standard (last gen): iPhone 6/6Plus/iPhone 8
+- [x] Android
+- [x] iOS Standard (previous gen): iPhone 6/6Plus/iPhone 8
 
 ### Test flows
 
