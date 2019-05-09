@@ -16,6 +16,11 @@ _Disclaimer, I haven't tested these steps on any machine besides my own, there c
 
 - I would use redux-thunk/redux-saga for sufficiently complex requirements, but in this case I will use react renderless components to handle async data flows.
 
+## Atomic Component Naming
+The file naming structure loosely follows the atomic folder structure, in this repo you'll only see two kinds of these: 
+- `atomic` components, which begin with `atm`. These are single-purpose presentational components which have no knowledge of redux.
+- `container` components, which begin with `ctr`. These components can be responsible for business logic, be aware of redux, Navigation, etc. They may not even render any UI.
+
 # Out of scope (but wouldn't be for an actual project)
 
 - Tablet support
